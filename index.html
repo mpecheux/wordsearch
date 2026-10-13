@@ -20,10 +20,13 @@
   button:active { background: #fff; }
   #scene { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; perspective: 1400px; touch-action: none; cursor: grab; min-height: 0; }
   #cube { --s: 300px; width: var(--s); height: var(--s); position: relative; transform-style: preserve-3d; }
-  .face { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr);   gap: 7px; padding: 4px; background: #000; backface-visibility: hidden; }
-    .cell { display: flex; align-items: center; justify-content: center;     background-color: #4a4a4a; color: #fff; border-radius: 9px; font-weight: 700; font-size: calc(var(--s) / 9);
-      background-image: linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.12));
-      box-shadow: inset 2px 2px 3px rgba(255,255,255,.14), inset -3px -3px 4px rgba(0,0,0,.4); }
+  .face { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr);     gap: 0; padding: 0; background: #000; backface-visibility: hidden; }
+      .cell { --m: 3.5px; --r: 9px; margin: var(--m); display: flex; align-items: center; justify-content: center; background-color: #4a4a4a; color: #fff; border-radius: var(--r); font-weight: 700; font-size: calc(var(--s) / 9);
+        background-image: linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.12)); }
+      .cell.el { margin-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+      .cell.er { margin-right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+      .cell.et { margin-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+      .cell.eb { margin-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
     .cell.sel { background-color: #c9b458; color: #000; }
     .cell.ok { background-color: #6aaa64; color: #000; }
     .cell.bad { background-color: #333; }
@@ -144,7 +147,8 @@ function renderCube() {
     for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
       const id = map(c, r);
       const d = document.createElement('div');
-      d.className = 'cell'; d.dataset.id = id; d.textContent = grid[id];
+      d.className = 'cell' + (c === 0 ? ' el' : '') + (c === M ? ' er' : '') + (r === 0 ? ' et' : '') + (r === M ? ' eb' : '');
+      d.dataset.id = id; d.textContent = grid[id];
       f.appendChild(d);
     }
     cube.appendChild(f);
